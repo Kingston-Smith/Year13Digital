@@ -1,14 +1,22 @@
-#imports
+#import external libraries
 from flask import Blueprint, render_template
-#defining auth, this is used in __init__.py
+
+#Setting auth blueprint
 auth=Blueprint("auth", __name__)
-#routes, basically the code that tells it what the pages are, this section is for pages where users do stuff with their accounts
+
+#routes
+
+#sign up
 @auth.route("/sign-up")
 def sign_up():
     return render_template("sign_up.html")
+    
+#log in    
 @auth.route("/login")
 def login():
     return render_template("login.html")
+
+#account
 @auth.route("/account")
 def account():
     return render_template("account.html")
