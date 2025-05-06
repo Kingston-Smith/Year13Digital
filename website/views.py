@@ -1,8 +1,12 @@
-#imports
+#import external libraries
 from flask import Blueprint, render_template
-#defining views (used in __init__)
+
+#set views blueprint
 views=Blueprint("views", __name__)
-#routes, this is where pages that don't heavily deal with the users account go
+
+#Home route
 @views.route("/")
+#home route function
 def home():
+    #returns homepage
     return render_template("home.html")
