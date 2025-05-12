@@ -60,6 +60,24 @@
               </div>
             </div>
           </nav>
+          <!--flash messages-->
+          {% with messages=get_flashed_messages(with_categories=True) %}
+          {% if messages %}
+            {% for categories, message in messages %}
+            {% if category=="error" %}
+            <div class="alert alert_danger alert-dismissible fade show" role="alert">
+              {{message}}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% else %}
+            <div class="alert alert_success alert-dismissible fade show" role="alert">
+              {{message}}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endif %}
+            {% endfor %}
+          {% endif %}
+          {% endwith %}
           <!--Imports contents from other html files.-->
         <div class="container">{% block content %}{% endblock %}</div>
         <!--Import popper and javascript-->
