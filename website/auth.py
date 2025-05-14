@@ -45,14 +45,29 @@ def sign_up():
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
-            flash('your account has been created!', category='success')
+            flash('Your account has been created!', category='success')
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html")
     
 #log in    
-@auth.route("/login")
+@auth.route("/login", methods=['GET', 'POST'])
 def login():
+    if request.method=='POST':
+        email=request.form.get("email")
+        password=request.form.get("password")
+
+        user=User.query.filter_by(email=email).first()
+        if user:
+            if check_password_hash(user.password, password):
+                flash("Welcome back", category="success")
+                login_user(user, remember=True)
+                return redirect(url_for('views.home'))
+            else:
+                flash("Password does not match", category="error")
+        else:
+            flash("There is no account with this Email, to create a new account go to the account creation page", category="error")
+
     return render_template("login.html")
 
 #account
