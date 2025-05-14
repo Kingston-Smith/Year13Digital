@@ -53,16 +53,23 @@ def sign_up():
 #log in    
 @auth.route("/login", methods=['GET', 'POST'])
 def login():
+    #If request was post
     if request.method=='POST':
+        #Get email and password from the form
         email=request.form.get("email")
         password=request.form.get("password")
-
+        
+        #Check the database for any users with the entered email address
         user=User.query.filter_by(email=email).first()
+        #If the email exists in the database
         if user:
+            #Checks if the existing user has the same password as entered
             if check_password_hash(user.password, password):
+                #Logs in
                 flash("Welcome back", category="success")
                 login_user(user, remember=True)
                 return redirect(url_for('views.home'))
+            #tells user what they did wrong
             else:
                 flash("Password does not match", category="error")
         else:
