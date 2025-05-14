@@ -63,7 +63,6 @@
           <!--flash messages-->
           {% with messages=get_flashed_messages(with_categories=True) %}
           {% if messages %}
-            {% for categories, message in messages %}
             {% if category=='error' %}
               <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 {{message}}
