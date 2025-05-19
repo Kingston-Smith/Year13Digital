@@ -11,3 +11,9 @@ views=Blueprint("views", __name__)
 def home():
     #returns homepage
     return render_template("home.html", user=current_user)
+
+#Forum route
+@views.route("/forum", methods=['GET', 'POST'])
+@login_required
+def forum():
+    return render_template("forum.html", user=current_user)
