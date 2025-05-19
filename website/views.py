@@ -1,5 +1,6 @@
 #import external libraries
 from flask import Blueprint, render_template
+from flask_login import login_user, logout_user, login_required, current_user
 
 #set views blueprint
 views=Blueprint("views", __name__)
@@ -9,4 +10,4 @@ views=Blueprint("views", __name__)
 #home route function
 def home():
     #returns homepage
-    return render_template("home.html")
+    return render_template("home.html", user=current_user)
