@@ -1,6 +1,10 @@
 #import external libraries
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
+#import database
+from . import db
+#import the database models
+from .models import User, Post
 
 #set views blueprint
 views=Blueprint("views", __name__)
@@ -16,4 +20,16 @@ def home():
 @views.route("/forum", methods=['GET', 'POST'])
 @login_required
 def forum():
+    if request.method=="POST":
+        title=request.form.get('title')
+        content=request.form.get('content')
+        if not title:
+            flash('Your post needs a title', category='error')
+        elif not content:
+            flash('You need to put some content', category='error')
+        else:
+            post=Post(title=title, content=content, author=current_user.id)
+            db.session.add(post)
+            db.session.commit()
+            flash('Post added!', category='success')
     return render_template("forum.html", user=current_user)
