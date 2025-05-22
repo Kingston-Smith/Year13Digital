@@ -33,3 +33,9 @@ def forum():
             db.session.commit()
             flash('Post added!', category='success')
     return render_template("forum.html", user=current_user)
+
+@views.route("/blog")
+@login_required
+def blog():
+    posts=Post.query.all()
+    return render_template("blog.html", user=current_user, posts=posts)
