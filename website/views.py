@@ -32,6 +32,7 @@ def forum():
             db.session.add(post)
             db.session.commit()
             flash('Post added!', category='success')
+            return redirect(url_for('views.blog'))
     return render_template("forum.html", user=current_user)
 
 @views.route("/blog")
