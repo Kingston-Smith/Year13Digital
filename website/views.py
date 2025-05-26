@@ -16,7 +16,7 @@ def home():
     #returns homepage
     return render_template("home.html", user=current_user)
 
-#Forum route
+#Create post route
 @views.route("/forum", methods=['GET', 'POST'])
 @login_required
 def forum():
@@ -40,3 +40,18 @@ def forum():
 def blog():
     posts=Post.query.all()
     return render_template("blog.html", user=current_user, posts=posts)
+
+#delete post route
+@views.route("/delete-post/<id>", methods=['GET', 'POST'])
+@login_required
+def delete_post(id):
+    post=Post.query.filter_by(id=id).first()
+    if not post:
+        flash("post does not exist, i'm not exactly sure how you managed to do this", category="error")
+    elif current_user.id!=post.author:
+        flash("You can't delete someone elses post", category="error")
+    else:
+        db.session.delete(post)
+        db.session.commit()
+        flash('Post deleted!', category='success')
+    return redirect(url_for('views.blog'))
