@@ -11,6 +11,7 @@ class User(db.Model, UserMixin):
     password=db.Column(db.String(20))
     date_created=db.Column(db.DateTime(timezone=True), default=func.now())
     posts=db.Relationship('Post', backref="user", passive_deletes=True)
+    comments=db.Relationship('Comment', backref='user', passive_deletes=True)
 
 
 #Posts database model
@@ -20,3 +21,12 @@ class Post(db.Model):
     content=db.Column(db.Text, nullable=False)
     date_created=db.Column(db.DateTime(timezone=True), default=func.now())
     author=db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
+    comments=db.Relationship('Comment', backref='post', passive_deletes=True)
+
+#Comments database model
+class Comment(db.Model):
+    id=db.Column(db.Integer, primary_key=True)
+    text=db.Column(db.String(150), nullable=False)
+    date_created=db.Column(db.DateTime(timezone=True), default=func.now())
+    author=db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
+    post_id=db.Column(db.Integer, db.ForeignKey('post.id', ondelete="CASCADE"), nullable=False)

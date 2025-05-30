@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 #import database
 from . import db
 #import the database models
-from .models import User, Post
+from .models import User, Post, Comment
 
 #set views blueprint
 views=Blueprint("views", __name__)
@@ -54,4 +54,21 @@ def delete_post(id):
         db.session.delete(post)
         db.session.commit()
         flash('Post deleted!', category='success')
+    return redirect(url_for('views.blog'))
+
+@views.route("/create-comment/<post_id>", methods=['POST'])
+@login_required
+def create_comment(post_id):
+    text=request.form.get('text')
+    if not text:
+        flash("Comment can not be empty", category="error")
+    else:
+        post=Post.query.filter_by(id=post_id)
+        if post:
+            comment=Comment(text=text, author=current_user.id, post_id=post_id)
+            db.session.add(comment)
+            db.session.commit()
+            flash('Comment added', category='success')
+        else:
+            flash('The post you are trying to comment on does not exist', category='error')
     return redirect(url_for('views.blog'))
