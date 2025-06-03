@@ -51,6 +51,8 @@ def delete_post(id):
     elif current_user.id!=post.author:
         flash("You can't delete someone elses post", category="error")
     else:
+        for comment in post.comments:
+            db.session.delete(comment)
         db.session.delete(post)
         db.session.commit()
         flash('Post deleted!', category='success')
@@ -71,4 +73,19 @@ def create_comment(post_id):
             flash('Comment added', category='success')
         else:
             flash('The post you are trying to comment on does not exist', category='error')
+    return redirect(url_for('views.blog'))
+
+#Delete comment
+@views.route("/delete-comment/<comment_id>", methods=['GET', 'POST'])
+@login_required
+def delete_comment(comment_id):
+    comment=Comment.query.filter_by(id=comment_id).first()
+    if not comment:
+        flash("comment does not exist, i'm not exactly sure how you managed to do this", category="error")
+    elif current_user.id!=comment.author and current_user.id!=comment.post.author:
+        flash("You must either own the post or the comment to delete a comment", category="error")
+    else:
+        db.session.delete(comment)
+        db.session.commit()
+        flash('Comment deleted!', category='success')
     return redirect(url_for('views.blog'))
