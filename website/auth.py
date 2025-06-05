@@ -93,3 +93,24 @@ def account(username):
 def logout():
     logout_user()
     return redirect(url_for('views.home'))
+
+@auth.route("/delete-account/<id>")
+@login_required
+def delete_account(id):
+    user=User.query.filter_by(id=id).first()
+    if not user:
+        flash("The account you are trying to delete does not exist", category="error")
+    elif user.id!=current_user.id:
+        flash("You can't delete someone elses account", category="error")
+    else:
+        logout_user()
+        for comment in user.comments:
+            db.session.delete(comment)
+        for post in user.posts:
+            for comment in post.comments:
+                db.session.delete(comment)
+            db.session.delete(post)
+        db.session.delete(user)
+        db.session.commit()
+        flash("account deleted successfully", category="success")
+    return redirect(url_for('views.home'))
