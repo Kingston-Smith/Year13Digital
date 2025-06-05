@@ -38,7 +38,7 @@ def forum():
 @views.route("/blog")
 @login_required
 def blog():
-    posts=Post.query.all()
+    posts=Post.query.order_by(Post.date_created.desc())
     return render_template("blog.html", user=current_user, posts=posts)
 
 #delete post route

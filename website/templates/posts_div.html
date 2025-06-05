@@ -8,7 +8,7 @@
     <br/>
     <div class="card border-dark" align="center">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <a href="/posts/{{post.user.username}}">{{post.user.username}}</a>
+            <a href="/account/{{post.user.username}}">{{post.user.username}}</a>
             <!--Delete post dropdown-->
             {% if user.id==post.author %}
             <div class="btn-group">
@@ -32,7 +32,7 @@
                     {% for comment in post.comments %}
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <a href="/posts/{{comment.user.username}}">{{comment.user.username}}</a>: {{comment.text}}
+                            <a href="/account/{{comment.user.username}}">{{comment.user.username}}</a>: {{comment.text}}
                         </div>
                         <div>
                             <small class="text-muted">{{comment.date_created}}</small>

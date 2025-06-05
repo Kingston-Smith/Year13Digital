@@ -77,11 +77,16 @@ def login():
 
     return render_template("login.html", user=current_user)
 
-#account
-@auth.route("/account")
+#account page
+@auth.route("/account/<username>")
 @login_required
-def account():
-    return render_template("account.html", user=current_user)
+def account(username):
+    user=User.query.filter_by(username=username).first()
+    if not user:
+        flash("User does not exist", category="error")
+        return redirect(url_for('views.blog'))
+    posts=user.posts
+    return render_template("account.html", user=current_user, posts=posts, username=username)
 
 @auth.route("/logout")
 @login_required
