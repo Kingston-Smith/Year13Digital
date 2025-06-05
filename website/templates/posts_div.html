@@ -1,5 +1,18 @@
 {% extends "template.html" %} {% block title %} View posts {% endblock %}
 {% block content %}
+{% if user.username==username %}
+<div align="center"><h3>Your Account</h3></div>
+<div class="card border-dark" align="center">
+    <div class="card-text">Username: {{user.username}}</div>
+    <br/>
+    <div class="card-text">Email: {{user.email}}</div>
+    <br/>
+    <div class="card-text">Account creation date: {{user.date_created}}</div>
+    <br/>
+    <a href="/delete-account/{{user.id}}">Delete Account</a>
+</div>
+<br/><br/>
+{% endif %}
 <div align="center">
     <h3>Posts</h3>
 </div>
