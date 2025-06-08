@@ -1,4 +1,17 @@
 {% extends "posts_div.html" %} {% block title %}((username))'s posts{% endblock %}{% block header %} ((username))'s posts {% endblock %}
+{% block usersearch %}
+<div align="center"><h3>Find a user</h3></div>
+<form method="POST">
+    <input type="text" name="username" id="username" class="form-control" placeholder="Enter username of user you want to find" />
+    <br/>
+    <br/>
+    <div align="center">
+        <button class="btn btn-primary" type="submit">
+            Find user
+        </button>
+    </div>
+</form>
+{% endblock %}
 {% block footer %}
 <div align="center">
     <a href="/blog"> <button type="button" class="btn btn-primary btn-large">All posts</button></a>

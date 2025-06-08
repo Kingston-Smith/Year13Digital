@@ -78,9 +78,11 @@ def login():
     return render_template("login.html", user=current_user)
 
 #account page
-@auth.route("/account/<username>")
+@auth.route("/account/<username>", methods=['GET', 'POST'])
 @login_required
 def account(username):
+    if request.method=="POST":
+        username=request.form.get("username")
     user=User.query.filter_by(username=username).first()
     if not user:
         flash("User does not exist", category="error")
