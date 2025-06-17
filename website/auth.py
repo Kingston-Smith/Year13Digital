@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 
 #import from .models user
-from .models import User
+from .models import User, Post
 
 #Setting auth blueprint
 auth=Blueprint("auth", __name__)
@@ -83,11 +83,12 @@ def login():
 def account(username):
     if request.method=="POST":
         username=request.form.get("username")
+    page=request.args.get('page', 1, type=int)
     user=User.query.filter_by(username=username).first()
     if not user:
         flash("User does not exist", category="error")
         return redirect(url_for('views.blog'))
-    posts=user.posts
+    posts=Post.query.filter_by(user=user).order_by(Post.date_created.desc()).paginate(page=page, per_page=4)
     return render_template("account.html", user=current_user, posts=posts, username=username)
 
 @auth.route("/logout")
