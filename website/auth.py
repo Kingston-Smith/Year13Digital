@@ -112,7 +112,11 @@ def delete_account(id):
         for post in user.posts:
             for comment in post.comments:
                 db.session.delete(comment)
+            for like in post.likes:
+                db.session.delete(like)
             db.session.delete(post)
+        for like in user.likes:
+            db.session.delete(like)
         db.session.delete(user)
         db.session.commit()
         flash("account deleted successfully", category="success")

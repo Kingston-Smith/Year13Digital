@@ -54,6 +54,8 @@ def delete_post(id):
     else:
         for comment in post.comments:
             db.session.delete(comment)
+        for like in post.likes:
+            db.session.delete(like)
         db.session.delete(post)
         db.session.commit()
         flash('Post deleted!', category='success')
