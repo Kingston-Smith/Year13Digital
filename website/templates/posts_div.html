@@ -32,12 +32,13 @@
                 {% else %}
                 <i class="far fa-thumbs-up" id="like-button-{{post.id}}" onclick="like({{post.id}})"></i>
                 {% endif %}
-                <!--Delete post dropdown-->
+                <!--Delete and update post dropdown-->
                 {% if user.id==post.author %}
                 <div class="btn-group">
                     <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown"></button>
                     <ul class="dropdown-menu">
                         <li><a href="/delete-post/{{post.id}}" class="dropdown-item">Delete</a></li>
+                        <li><a href="/update-post/{{post.id}}" class="dropdown-item">Update</a></li>
                     </ul>
                 </div>
                 {% endif %}

@@ -5,6 +5,8 @@ from flask_login import login_user, logout_user, login_required, current_user
 from . import db
 #import the database models
 from .models import User, Post, Comment, Like
+#importing from .forms
+from .forms import PostForm
 
 #set views blueprint
 views=Blueprint("views", __name__)
@@ -34,6 +36,29 @@ def forum():
             flash('Post added!', category='success')
             return redirect(url_for('views.blog'))
     return render_template("forum.html", user=current_user)
+
+#update post route
+@views.route("/update-post/<id>", methods=['GET', 'POST'])
+@login_required
+def update_post(id):
+    post=Post.query.filter_by(id=id).first()
+    if not post:
+        flash("post does not exist, i'm not exactly sure how you managed to do this", category="error")
+    elif current_user.id!=post.author:
+        flash("You can't update someone elses post", category="error")
+    form=PostForm()
+    if form.validate_on_submit():
+        post.title=form.title.data
+        post.content=form.content.data
+        db.session.commit()
+        flash('Post updated successfully', category='success')
+        page=request.args.get('page', 1, type=int)
+        posts=Post.query.order_by(Post.date_created.desc()).paginate(page=page, per_page=4)
+        return render_template("blog.html", user=current_user, posts=posts)
+    elif request.method=='GET':
+        form.title.data=post.title
+        form.content.data=post.content
+    return render_template("update_posts.html", form=form, user=current_user, posts=post)
 
 @views.route("/blog")
 @login_required
