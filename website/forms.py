@@ -11,3 +11,8 @@ class PostForm(FlaskForm):
     title=StringField('Title', validators=[DataRequired()])
     content=TextAreaField('Content', validators=[DataRequired()])
     submit=SubmitField('Update')
+
+#form for updating comments
+class CommentForm(FlaskForm):
+    content=TextAreaField('Content', validators=[DataRequired()])
+    submit=SubmitField('Update')

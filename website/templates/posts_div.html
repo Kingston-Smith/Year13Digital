@@ -67,6 +67,9 @@
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a href="/delete-comment/{{comment.id}}" class="dropdown-item">Delete</a>
+                                        {% if user.id==comment.author %}
+                                        <a href="/update-comment/{{comment.id}}" class="dropdown-item">Update</a>
+                                        {% endif %}
                                     </li>
                                 </ul>
                             </div>

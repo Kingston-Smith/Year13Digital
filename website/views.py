@@ -6,7 +6,7 @@ from . import db
 #import the database models
 from .models import User, Post, Comment, Like
 #importing from .forms
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 
 #set views blueprint
 views=Blueprint("views", __name__)
@@ -59,6 +59,27 @@ def update_post(id):
         form.title.data=post.title
         form.content.data=post.content
     return render_template("update_posts.html", form=form, user=current_user, posts=post)
+
+#update comment route
+@views.route("/update-comment/<id>", methods=['GET', 'POST'])
+@login_required
+def update_comment(id):
+    comment=Comment.query.filter_by(id=id).first()
+    if not comment:
+        flash("comment does not exist, i'm not exactly sure how you managed to do this", category="error")
+    elif current_user.id!=comment.author:
+        flash("You can't update someone elses comment", category="error")
+    form=CommentForm()
+    if form.validate_on_submit():
+        comment.text=form.content.data
+        db.session.commit()
+        flash('Comment updated successfully', category='success')
+        page=request.args.get('page', 1, type=int)
+        posts=Post.query.order_by(Post.date_created.desc()).paginate(page=page, per_page=4)
+        return render_template("blog.html", user=current_user, posts=posts)
+    elif request.method=='GET':
+        form.content.data=comment.text
+    return render_template("update_comments.html", form=form, user=current_user, comments=comment)
 
 @views.route("/blog")
 @login_required
