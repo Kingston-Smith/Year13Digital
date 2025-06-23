@@ -7,6 +7,9 @@ from . import db
 from .models import User, Post, Comment, Like
 #importing from .forms
 from .forms import PostForm, CommentForm
+#Importing the time
+from datetime import datetime
+
 
 #set views blueprint
 views=Blueprint("views", __name__)
@@ -48,10 +51,14 @@ def update_post(id):
         flash("You can't update someone elses post", category="error")
     form=PostForm()
     if form.validate_on_submit():
-        post.title=form.title.data
-        post.content=form.content.data
-        db.session.commit()
-        flash('Post updated successfully', category='success')
+        if post.title!=form.title.data or post.content!=form.content.data:
+            post.title=form.title.data
+            post.content=form.content.data
+            post.last_updated=datetime.now()
+            db.session.commit()
+            flash('Post updated successfully', category='success')
+        else:
+            flash('You did not actually change anything', category="error")
         page=request.args.get('page', 1, type=int)
         posts=Post.query.order_by(Post.date_created.desc()).paginate(page=page, per_page=4)
         return render_template("blog.html", user=current_user, posts=posts)
@@ -71,9 +78,13 @@ def update_comment(id):
         flash("You can't update someone elses comment", category="error")
     form=CommentForm()
     if form.validate_on_submit():
-        comment.text=form.content.data
-        db.session.commit()
-        flash('Comment updated successfully', category='success')
+        if comment.text!=form.content.data:
+            comment.text=form.content.data
+            comment.last_updated=datetime.now()
+            db.session.commit()
+            flash('Comment updated successfully', category='success')
+        else:
+            flash('You did not actually change anything', category='error')
         page=request.args.get('page', 1, type=int)
         posts=Post.query.order_by(Post.date_created.desc()).paginate(page=page, per_page=4)
         return render_template("blog.html", user=current_user, posts=posts)
