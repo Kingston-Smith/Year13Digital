@@ -47,7 +47,7 @@ def update_post(id):
     post=Post.query.filter_by(id=id).first()
     form=PostForm()
     if not post:
-        flash("post does not exist, i'm not exactly sure how you managed to do this", category="error")
+        flash("post does not exist", category="error")
     elif current_user.id!=post.author:
         flash("You can't update someone elses post", category="error")
     elif form.validate_on_submit():
@@ -105,7 +105,7 @@ def blog():
 def delete_post(id):
     post=Post.query.filter_by(id=id).first()
     if not post:
-        flash("post does not exist, i'm not exactly sure how you managed to do this", category="error")
+        flash("post does not exist", category="error")
     elif current_user.id!=post.author:
         flash("You can't delete someone elses post", category="error")
     else:
@@ -141,7 +141,7 @@ def create_comment(post_id):
 def delete_comment(comment_id):
     comment=Comment.query.filter_by(id=comment_id).first()
     if not comment:
-        flash("comment does not exist, i'm not exactly sure how you managed to do this", category="error")
+        flash("comment does not exist", category="error")
     elif current_user.id!=comment.author and current_user.id!=comment.post.author:
         flash("You must either own the post or the comment to delete a comment", category="error")
     else:
