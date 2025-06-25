@@ -45,12 +45,12 @@ def forum():
 @login_required
 def update_post(id):
     post=Post.query.filter_by(id=id).first()
+    form=PostForm()
     if not post:
         flash("post does not exist, i'm not exactly sure how you managed to do this", category="error")
     elif current_user.id!=post.author:
         flash("You can't update someone elses post", category="error")
-    form=PostForm()
-    if form.validate_on_submit():
+    elif form.validate_on_submit():
         if post.title!=form.title.data or post.content!=form.content.data:
             post.title=form.title.data
             post.content=form.content.data
@@ -58,7 +58,7 @@ def update_post(id):
             db.session.commit()
             flash('Post updated successfully', category='success')
         else:
-            flash('You did not actually change anything', category="error")
+            flash('You did not actually change anything', category="success")
         page=request.args.get('page', 1, type=int)
         posts=Post.query.order_by(Post.date_created.desc()).paginate(page=page, per_page=4)
         return render_template("blog.html", user=current_user, posts=posts)
@@ -72,19 +72,19 @@ def update_post(id):
 @login_required
 def update_comment(id):
     comment=Comment.query.filter_by(id=id).first()
+    form=CommentForm()
     if not comment:
-        flash("comment does not exist, i'm not exactly sure how you managed to do this", category="error")
+        flash("comment does not exist", category="error")
     elif current_user.id!=comment.author:
         flash("You can't update someone elses comment", category="error")
-    form=CommentForm()
-    if form.validate_on_submit():
+    elif form.validate_on_submit():
         if comment.text!=form.content.data:
             comment.text=form.content.data
             comment.last_updated=datetime.now()
             db.session.commit()
             flash('Comment updated successfully', category='success')
         else:
-            flash('You did not actually change anything', category='error')
+            flash('You did not actually change anything', category='success')
         page=request.args.get('page', 1, type=int)
         posts=Post.query.order_by(Post.date_created.desc()).paginate(page=page, per_page=4)
         return render_template("blog.html", user=current_user, posts=posts)
