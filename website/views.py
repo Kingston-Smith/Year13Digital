@@ -167,3 +167,13 @@ def like(post_id):
         db.session.add(like)
         db.session.commit()
     return jsonify({'likes': len(post.likes), "liked": current_user.id in map(lambda x: x.author, post.likes)})
+
+@views.route("/setting")
+@login_required
+def setting():
+    return render_template("Information/setting_up.html", user=current_user)
+
+@views.route("/during")
+@login_required
+def during():
+    return render_template("Information/while_running.html", user=current_user)
