@@ -33,7 +33,8 @@ def forum():
         elif not content:
             flash('You need to put some content', category='error')
         else:
-            post=Post(title=title, content=content, author=current_user.id)
+            time=datetime.now()
+            post=Post(title=title, content=content, author=current_user.id, date_created=time, last_updated=time)
             db.session.add(post)
             db.session.commit()
             flash('Post added!', category='success')
@@ -127,7 +128,8 @@ def create_comment(post_id):
     else:
         post=Post.query.filter_by(id=post_id)
         if post:
-            comment=Comment(text=text, author=current_user.id, post_id=post_id)
+            time=datetime.now()
+            comment=Comment(text=text, author=current_user.id, post_id=post_id, date_created=time, last_updated=time)
             db.session.add(comment)
             db.session.commit()
             flash('Comment added', category='success')
@@ -163,7 +165,7 @@ def like(post_id):
         db.session.delete(like)
         db.session.commit()
     else:
-        like=Like(author=current_user.id, post_id=post_id)
+        like=Like(author=current_user.id, post_id=post_id, date_created=datetime.now())
         db.session.add(like)
         db.session.commit()
     return jsonify({'likes': len(post.likes), "liked": current_user.id in map(lambda x: x.author, post.likes)})
