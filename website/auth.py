@@ -44,7 +44,7 @@ def sign_up():
         elif len(email)<4:
             flash('Email is invalid', category='error')
         else:
-            new_user=User(email=email, username=username, password=generate_password_hash(password1, method='scrypt:32768:8:1'), date_created=datetime.now())
+            new_user=User(email=email, username=username, password=generate_password_hash(password1, method='scrypt:32768:8:1'), date_created="{:%B %d, %Y %H:%M:%S}".format(datetime.now()))
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)

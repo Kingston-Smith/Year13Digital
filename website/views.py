@@ -33,8 +33,7 @@ def forum():
         elif not content:
             flash('You need to put some content', category='error')
         else:
-            time=datetime.now()
-            post=Post(title=title, content=content, author=current_user.id, date_created=time, last_updated=time)
+            post=Post(title=title, content=content, author=current_user.id, date_created="{:%B %d, %Y %H:%M:%S}".format(datetime.now()), last_updated="{:%B %d, %Y %H:%M:%S}".format(datetime.now()))
             db.session.add(post)
             db.session.commit()
             flash('Post added!', category='success')
@@ -55,7 +54,7 @@ def update_post(id):
         if post.title!=form.title.data or post.content!=form.content.data:
             post.title=form.title.data
             post.content=form.content.data
-            post.last_updated=datetime.now()
+            post.last_updated="{:%B %d, %Y %H:%M:%S}".format(datetime.now())
             db.session.commit()
             flash('Post updated successfully', category='success')
         else:
@@ -81,7 +80,7 @@ def update_comment(id):
     elif form.validate_on_submit():
         if comment.text!=form.content.data:
             comment.text=form.content.data
-            comment.last_updated=datetime.now()
+            comment.last_updated="{:%B %d, %Y %H:%M:%S}".format(datetime.now())
             db.session.commit()
             flash('Comment updated successfully', category='success')
         else:
@@ -128,8 +127,7 @@ def create_comment(post_id):
     else:
         post=Post.query.filter_by(id=post_id)
         if post:
-            time=datetime.now()
-            comment=Comment(text=text, author=current_user.id, post_id=post_id, date_created=time, last_updated=time)
+            comment=Comment(text=text, author=current_user.id, post_id=post_id, date_created="{:%B %d, %Y %H:%M:%S}".format(datetime.now()), last_updated="{:%B %d, %Y %H:%M:%S}".format(datetime.now()))
             db.session.add(comment)
             db.session.commit()
             flash('Comment added', category='success')
@@ -165,7 +163,7 @@ def like(post_id):
         db.session.delete(like)
         db.session.commit()
     else:
-        like=Like(author=current_user.id, post_id=post_id, date_created=datetime.now())
+        like=Like(author=current_user.id, post_id=post_id, date_created="{:%B %d, %Y %H:%M:%S}".format(datetime.now()))
         db.session.add(like)
         db.session.commit()
     return jsonify({'likes': len(post.likes), "liked": current_user.id in map(lambda x: x.author, post.likes)})
