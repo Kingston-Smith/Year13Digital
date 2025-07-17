@@ -104,7 +104,13 @@
             <input type="text" id="text" name="text" class="form-control" placeholder="Enter your comment"/>
             <button type="btn" class="btn btn-primary">Comment</button>
         </form>
-        <div class="card-footer text-muted">{{post.date_created}}</div>
+        <div class="card-footer text-muted">
+            date created: {{post.date_created}}
+            {% if post.date_created!=post.last_updated %}
+            <br/>
+            last updated: {{post.last_updated}}
+            {% endif %}
+        </div>
     </div>
     <br/>
     {% endfor %}
