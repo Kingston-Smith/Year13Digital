@@ -1,8 +1,11 @@
 {% extends "template.html" %} {% block title %} View posts {% endblock %}
+<!--This page feeds into both the account page and the view posts page-->
 {% block content %}
+<!--For account page, only shows if the current user is the user the account belongs to-->
 {% if user.username==username %}
 <div align="center"><h3>Your Account</h3></div>
 <br/><br/>
+<!--Shows the users details-->
 <div class="card border-dark" align="center">
     <div class="card-text">Username: {{user.username}}</div>
     <br/>
@@ -10,15 +13,18 @@
     <br/>
     <div class="card-text">Account created: {{user.date_created}}</div>
     <br/>
+    <!--Delete account button-->
     <a href="/delete-account/{{user.id}}">Delete Account</a>
 </div>
 <br/><br/>
 {% endif %}
+<!--This is where the account pages searchbar for users gets placed-->
 {% block usersearch %}{% endblock %}
 <br/><br/>
 <div align="center">
     <h3>Posts</h3>
 </div>
+<!--This is the code for sorting the posts into pages-->
 {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
 {% if page_num %}
 {% if posts.page==page_num %}
@@ -30,20 +36,24 @@
 ...
 {% endif %}
 {% endfor %}
+<!--This is for showing the posts-->
 <div id="posts">
+    <!--For loop, runs for every post if on blog page, or for every post owned by the user on the account page-->
     {% for post in posts %}
     <br/>
     <div class="card border-dark" align="center">
         <div class="card-header d-flex justify-content-between align-items-center">
+            <!--Owner of the post-->
             <a href="/account/{{post.user.username}}">{{post.user.username}}</a>
             <div>
+                <!--Like count and route for leaving/removing likes-->
                 <span id="likes-count-{{post.id}}">{{post.likes|length}}</span>
                 {% if user.id in post.likes|map(attribute="author")|list %}
                 <i class="fas fa-thumbs-up" id="like-button-{{post.id}}" onclick="like({{post.id}})"></i>
                 {% else %}
                 <i class="far fa-thumbs-up" id="like-button-{{post.id}}" onclick="like({{post.id}})"></i>
                 {% endif %}
-                <!--Delete and update post dropdown-->
+                <!--Delete and update post dropdown, only shows for the owner of the post-->
                 {% if user.id==post.author %}
                 <div class="btn-group">
                     <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown"></button>
@@ -55,6 +65,7 @@
                 {% endif %}
             </div>
         </div>
+        <!--Post title and content-->
         <div class="card-body">
             <div class="card-text"><h6>{{post.title}}</h6></div>
         </div>
@@ -65,13 +76,18 @@
         <div class="collapse" id="comments-{{post.id}}">
             <div class="card">
                 <div class="card-body" id="comments-expanded-{{post.id}}">
+                    <!--For loop for comments, works similarly to the posts one-->
                     {% for comment in post.comments %}
                     <div class="d-flex justify-content-between align-items-center">
+                        <!--Comment owner and text-->
                         <div>
                             <a href="/account/{{comment.user.username}}">{{comment.user.username}}</a>: {{comment.text}}
                         </div>
+                        <!--Comment creation date-->
                         <div>
                             <small class="text-muted">{{comment.date_created}}</small>
+                            <!--Delete and update comment dropdown, this only shows for the creator of the post and for the creator of the comment.
+                            The creator of the post can only delete, not update-->
                             {% if user.id==comment.author or user.id==post.author %}
                             <div class="btn-group">
                                 <button type="button" class="btn btn-small btn-primary dropdown-toggle" data-bs-toggle="dropdown"></button>
@@ -91,6 +107,7 @@
                 </div>
             </div>
         </div>
+        <!--view comments button-->
         <p class="card-text">
             {% if post.comments|length>0 %}
             <a data-bs-toggle="collapse" href="#comments-{{post.id}}" role="button">
@@ -100,10 +117,12 @@
             <small class="text-muted">No comments</small>
             {% endif %}
         </p>
+        <!--Creating a comment-->
         <form class="input-group mb-3" method="POST" action="/create-comment/{{post.id}}">
             <input type="text" id="text" name="text" class="form-control" placeholder="Enter your comment"/>
             <button type="btn" class="btn btn-primary">Comment</button>
         </form>
+        <!--Date created and last updated for posts-->
         <div class="card-footer text-muted">
             date created: {{post.date_created}}
             {% if post.date_created!=post.last_updated %}
@@ -115,6 +134,7 @@
     <br/>
     {% endfor %}
 </div>
+<!--Page seperation again-->
 {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
 {% if page_num %}
 {% if posts.page==page_num %}
@@ -127,6 +147,7 @@
 {% endif %}
 {% endfor %}
 
+<!--Link to post creation page-->
 {% block footer %}
 <div align="center">
     <a href="/forum">

@@ -14,20 +14,19 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI']=f'sqlite:///{DB_NAME}'
     db.init_app(app)
     
-#Importing views and auth from views.py and auth.py and registering blueprints
+    #Importing views and auth from views.py and auth.py and the user database from models and registering blueprints
     from .views import views
-
     app.register_blueprint(views, url_prefix="/")
-
     from .auth import auth
-
     app.register_blueprint(auth, url_prefix="/")
-
     from .models import User
-
+    
+    #If database doesn't exist create it, won't do much after the first usage
+    #but dont delete it in case you decide to update what information databases store
     with app.app_context():
         db.create_all()
 
+    #login manager stuff    
     login_manager=LoginManager()
     login_manager.login_view="auth.login"
     login_manager.init_app(app)

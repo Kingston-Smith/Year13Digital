@@ -6,6 +6,8 @@ from wtforms.validators import DataRequired, length, ValidationError
 #Importing user database from models
 from .models import User
 
+#This is all for updating posts and comments
+
 #form for updating posts
 class PostForm(FlaskForm):
     title=StringField('Title', validators=[DataRequired()])

@@ -2,6 +2,7 @@ from . import db
 from sqlalchemy.sql import func
 from flask_login import UserMixin
 
+#This doesn't store the information, but it's used in the database creation.
 
 #User database model
 class User(db.Model, UserMixin):
