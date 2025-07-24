@@ -118,6 +118,7 @@ def delete_post(id):
         flash('Post deleted!', category='success')
     return redirect(url_for('views.blog'))
 
+#create comment
 @views.route("/create-comment/<post_id>", methods=['POST'])
 @login_required
 def create_comment(post_id):
